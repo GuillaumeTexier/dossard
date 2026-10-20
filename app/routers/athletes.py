@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, status
+from typing import Annotated
+
+from fastapi import APIRouter, Body, status
 
 from app.db import Conn
 from app.repositories import athletes
-from app.schemas import AthleteCreate, AthleteOut
+from app.schemas import AthleteCreate, AthleteOut, ImportReport
 
 router = APIRouter(prefix="/athletes", tags=["athletes"])
 
@@ -12,6 +14,13 @@ router = APIRouter(prefix="/athletes", tags=["athletes"])
 @router.get("", response_model=list[AthleteOut])
 def list_athletes(conn: Conn, club: str | None = None) -> list[AthleteOut]:
     return athletes.list_athletes(conn, club=club)
+
+
+@router.post("/import", response_model=ImportReport)
+def import_athletes(
+    conn: Conn, body: Annotated[bytes, Body(media_type="text/csv")]
+) -> ImportReport:
+    return athletes.import_athletes(conn, body)
 
 
 @router.get("/{athlete_id}", response_model=AthleteOut)
