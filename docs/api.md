@@ -27,12 +27,14 @@ Les erreurs de validation (422) gardent le format FastAPI par défaut.
 
 | Méthode | Route | Description | Codes |
 |---|---|---|---|
+| GET | `/health` | Vérifie que l'API répond : renvoie `{"status": "ok"}` | 200 |
 | GET | `/competitions` | Liste les compétitions triées par date, filtres optionnels `?status=draft\|open\|closed\|finished` et `?q=` (texte contenu dans le nom) | 200, 422 |
 | POST | `/competitions` | Crée une compétition (`name`, `date` obligatoires, `venue` optionnel), au statut `draft` | 201, 422 |
 | GET | `/competitions/{competition_id}` | Détail d'une compétition avec ses épreuves | 200, 404 |
 | PATCH | `/competitions/{competition_id}` | Modifie `name`, `venue`, `date` et/ou `status` | 200, 404, 409, 422 |
 | POST | `/competitions/{competition_id}/events` | Ajoute une épreuve (`name`, `unit`, `category` optionnelle) | 201, 404, 422 |
 | GET | `/athletes` | Liste les athlètes triés par nom, filtre optionnel `?club=` (égalité exacte) | 200 |
+| GET | `/athletes/{athlete_id}` | Détail d'un athlète, avec sa `category` pour la saison en cours | 200, 404, 422 |
 | POST | `/athletes` | Crée un athlète ; la réponse ajoute sa `category` pour la saison en cours | 201, 409, 422 |
 | POST | `/events/{event_id}/registrations` | Inscrit un athlète (`athlete_id`) à une épreuve et lui attribue un dossard | 201, 404, 409, 422 |
 | PATCH | `/registrations/{registration_id}` | Change le `status` d'une inscription | 200, 404, 409, 422 |
