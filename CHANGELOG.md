@@ -2,6 +2,7 @@
 
 ## Non publié
 
+- Corrige `GET /competitions/{competition_id}/results.csv` : les champs contenant une virgule (ex. nom de club) sont désormais entre guillemets, ce qui ne décale plus les colonnes.
 - Modifie `GET /events/{event_id}/ranking` : renvoie désormais la liste nue des entrées (plus d'enveloppe `{"data", "count"}`) ; l'erreur 404 passe par `NotFoundError` (`not_found`).
 
 - Ajoute `POST /athletes/import` : importe un CSV de licenciés (`text/csv`, `;`, dates `jj/mm/aaaa`) et renvoie `created`, `skipped` et `errors` par ligne (400 `invalid_csv`, `invalid_encoding`). Remplace `scripts/legacy/import_licencies.py`, supprimé.
