@@ -2,9 +2,7 @@
 
 ## Non publié
 
-- Corrige `GET /competitions/{competition_id}/results.csv` : les champs contenant une virgule (ex. nom de club) sont désormais entre guillemets, ce qui ne décale plus les colonnes.
-- Modifie `GET /events/{event_id}/ranking` : renvoie désormais la liste nue des entrées (plus d'enveloppe `{"data", "count"}`) ; l'erreur 404 passe par `NotFoundError` (`not_found`).
-
-- Ajoute `POST /athletes/import` : importe un CSV de licenciés (`text/csv`, `;`, dates `jj/mm/aaaa`) et renvoie `created`, `skipped` et `errors` par ligne (400 `invalid_csv`, `invalid_encoding`). Remplace `scripts/legacy/import_licencies.py`, supprimé.
-- Ajoute `GET /health` : vérifie que l'API répond (`{"status": "ok"}`).
-- Ajoute `GET /athletes/{athlete_id}` : détail d'un athlète (404 `not_found` s'il n'existe pas).
+- Harmonise `GET /events/{event_id}/ranking` : renvoie désormais la liste nue des entrées (plus d'enveloppe `{"data", "count"}`) ; épreuve inconnue → 404 au format `{"error": {...}}` (code `not_found`). Ajoute un `summary` à chaque route de résultats.
+- Ajoute la pagination `?limit=` (1–100, défaut 50) et `?offset=` (≥ 0, défaut 0) à `GET /athletes`, appliquée après le filtre `club` ; valeurs hors bornes rejetées en 422.
+- Ajoute `POST /athletes/import` : import d'un CSV fédéral (`text/csv`, `;`, dates `jj/mm/aaaa`) avec compte-rendu `created` / `skipped` / `errors`. Remplace `scripts/legacy/import_licencies.py`, supprimé.
+- Ajoute `GET /athletes/{athlete_id}` : détail d'un athlète (404 si introuvable).

@@ -1,4 +1,3 @@
-
 # Checklist des routes
 
 - [ ] Erreurs métier par `app/errors.py` (`NotFoundError`, `ConflictError`), jamais `HTTPException`.

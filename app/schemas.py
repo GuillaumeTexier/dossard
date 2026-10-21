@@ -105,7 +105,7 @@ class ImportLineError(BaseModel):
     message: str
 
 
-class ImportReport(BaseModel):
+class AthleteImportResult(BaseModel):
     created: int
     skipped: int
     errors: list[ImportLineError]

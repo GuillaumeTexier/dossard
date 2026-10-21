@@ -1,7 +1,7 @@
 """Génère une page HTML du classement d'une épreuve.
 
 Usage, depuis la racine du dépôt, venv activé :
-    python .claude/skills/classement-html/scripts/classement_html.py <event_id>
+    python scripts/classement_html.py <event_id>
 
 Le classement vient de l'API (GET /events/{event_id}/ranking), appelée en interne sans
 serveur : la page montre exactement ce que renvoie l'API. Le nom et l'unité de l'épreuve

@@ -3,8 +3,9 @@ from __future__ import annotations
 from fastapi import APIRouter, Response
 
 from app.db import Conn
+from app.ranking import rank_results
 from app.repositories import results
-from app.schemas import RankingEntry, ResultIn, ResultOut
+from app.schemas import RankingEntry, ResultIn, ResultOut, ResultUnit
 
 router = APIRouter(tags=["results"])
 
@@ -12,7 +13,7 @@ router = APIRouter(tags=["results"])
 @router.put(
     "/registrations/{registration_id}/result",
     response_model=ResultOut,
-    summary="Enregistrer le résultat d'une inscription",
+    summary="Enregistrer ou remplacer le résultat d'une inscription",
 )
 def record_result(registration_id: int, data: ResultIn, conn: Conn) -> ResultOut:
     return results.record_result(conn, registration_id, data.performance)
@@ -24,7 +25,8 @@ def record_result(registration_id: int, data: ResultIn, conn: Conn) -> ResultOut
     summary="Lister le classement d'une épreuve",
 )
 def get_ranking(event_id: int, conn: Conn) -> list[RankingEntry]:
-    return results.get_ranking(conn, event_id)
+    event = results.get_event(conn, event_id)
+    return rank_results(results.ranking_rows(conn, event_id), ResultUnit(event["unit"]))
 
 
 @router.get(

@@ -1,29 +1,29 @@
 ---
 name: classement-html
-description: Génère la page HTML du classement d'une épreuve de dossard (classement-<event_id>.html). À utiliser quand on demande une page, un export HTML ou une version imprimable/publiable du classement d'une épreuve.
+description: Produit la page HTML (un fichier .html) du classement d'une épreuve de dossard. À utiliser quand on demande une page, un fichier HTML ou une version imprimable/partageable du classement ou des résultats d'une épreuve.
+allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/classement_html.py *)
 ---
 
-# Page HTML de classement
+# Classement HTML d'une épreuve
 
-Le script `scripts/classement_html.py` appelle `GET /events/{event_id}/ranking` en interne (sans serveur) et écrit `classement-<event_id>.html` dans le répertoire courant : la page reflète exactement la réponse de l'API.
+Le script `scripts/classement_html.py` de cette skill interroge `GET /events/{event_id}/ranking` et écrit la page HTML : elle reflète exactement ce que renvoie l'API.
 
-## Étapes
+## Instructions
 
-1. Identifier l'`event_id`. S'il n'est pas donné, le chercher via `GET /competitions` et les épreuves de la compétition, ou demander à l'utilisateur.
-2. Depuis la racine du dépôt, venv activé :
+1. **Identifiant de l'épreuve** : s'il n'est pas donné, le chercher par le nom dans `data/dossard.db`, en lecture seule :
 
    ```bash
-   python .claude/skills/classement-html/scripts/classement_html.py <event_id>
+   sqlite3 -readonly data/dossard.db "SELECT id, name FROM events WHERE name LIKE '%<mot>%'"
    ```
 
-3. Vérifier la sortie : `classement-<event_id>.html : N athlètes classés`.
-   - « Base introuvable » : lancer `python scripts/seed.py --reset`.
-   - « Épreuve introuvable » ou 404 : l'`event_id` n'existe pas.
-4. Indiquer à l'utilisateur le chemin du fichier généré.
+   Si plusieurs épreuves correspondent, ou aucune, demander à l'utilisateur laquelle choisir plutôt que de deviner.
 
-## Règles
+2. **Génération** : depuis la racine du dépôt, venv activé :
 
-- Ne pas modifier le HTML à la main : relancer le script. Pour changer la mise en page, éditer `render()` dans le script.
-- Le fichier généré est un livrable, pas du code : ne pas le committer sans demande.
-- Ne pas lire `.env`.
-- Le HTML n'affiche que les champs publics du classement (rang, dossard, nom, club, performance) : n'y ajouter ni licence, ni certificat médical, ni date de naissance.
+   ```bash
+   python ${CLAUDE_SKILL_DIR}/scripts/classement_html.py <event_id>
+   ```
+
+3. **Ne pas écrire de HTML soi-même** : la page vient uniquement du script. S'il échoue (base absente, épreuve introuvable, classement indisponible), rapporter son message tel quel sans contourner.
+
+4. **Réponse** : donner le chemin du fichier produit (`classement-<event_id>.html`, écrit dans le répertoire courant) et le nombre d'athlètes classés affiché par le script.
