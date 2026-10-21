@@ -1,0 +1,1 @@
+{"date": "2026-10-21T10:27:14+00:00", "outil": "mcp__dossard__query_view", "arguments": {"view": "v_public_results", "filters": {"competition": "Meeting d'automne", "event": "100 m"}, "limit": 200}}
